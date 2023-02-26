@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+{% block stylesheets %}
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: -ms-flexbox;
+        display: -webkit-box;
+        /*display: flex;*/
+        -ms-flex-align: center;
+        -ms-flex-pack: center;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+    }
+
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: 0 auto;
+    }
+    .form-signin .form-control {
+        position: relative;
+        box-sizing: border-box;
+        height: auto;
+        padding: 10px;
+        font-size: 16px;
+    }
+    .form-signin .form-control:focus {
+        z-index: 2;
+    }
+    .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+{% block header %}{% endblock %}
+{% block body %}
+    <div class="container mt-5">
+{#<form method="post" class="w-50">#}
+{#    {% if error %}#}
+{#        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
+{#    {% endif %}#}
+
+{#    {% if app.user %}#}
+{#        <div class="mb-3">#}
+{#            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>#}
+{#        </div>#}
+{#    {% endif %}#}
+
+{#    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>#}
+{#    <label for="inputTelegram">Telegram</label>#}
+{#    <input type="text" value="{{ last_username }}" name="telegram" id="inputTelegram" class="form-control" autocomplete="username" required autofocus>#}
+{#    <label for="inputPassword">Password</label>#}
+{#    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>#}
+
+
+{#    <button class="btn btn-lg btn-primary" type="submit">#}
+{#        Sign in#}
+{#    </button>#}
+{#</form>#}
+
+        <form method="post" class="form-signin text-center">
+            <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
+            <label for="inputEmail" class="sr-only mb-1"></label>
+            <input name="telegram" type="text" id="inputEmail" class="form-control mb-0" placeholder="Логин" required="" autofocus="">
+            <label for="inputPassword" class="sr-only mb-1"></label>
+            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="">
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                {% if error %}
+                    <div class="text-danger font-italic mb-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+        </form>
+
+    </div>
+{% endblock %}

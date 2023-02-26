@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Админ Панель!{% endblock %}
+
+{% block body %}
+
+
+    <div class="container-fluid mt-4 ">
+
+        <div class="row align-items-center ">
+            <div class="col">
+                <div class="card text-bg-light mb-3">
+                    <div class="card-header">Общее кол-во лидов</div>
+                    <div class="card-body text-center">
+                        {{ total.leads }} шт.
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-bg-light mb-3">
+                    <div class="card-header">Общая выплата</div>
+                    <div class="card-body text-center">
+                        {{ total.payout }} $
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-bg-light mb-3">
+                    <div class="card-header">Общий аппрув</div>
+                    <div class="card-body text-center">
+                        {{ total.approve }} %
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
+            Добавить пользователя
+        </button>
+        <table id="adminTable" class="table table-hover text-monospace font-monospace">
+            <thead>
+            <tr>
+                <th scope="col">Пользователь</th>
+                <th scope="col">Кол-во лидов</th>
+                <th scope="col">Апрув %</th>
+                <th scope="col">Выплата (баеру/всего)</th>
+                <th scope="col">Ставка</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user, val in users %}
+                <tr>
+                    <td><a href="{{ '/leads/' ~ val.id }}">{{ user }}</a></td>
+                    <td>{{ val.count }}</td>
+                    <td>{{ val.count != 0 ? (val.approve_leads / val.count)*100|round(1) ~ ' %' : 0 }}</td>
+                    <td>{{ total.ratePayout }} $ / {{ val.payout }} $</td>
+                    <td>
+                        <input class="rate" value="{{ val.rate ?? '100' }}" style="max-width: 50px" type="text" name="rate"> %
+                        <a class="changeRate" data-id="{{ val.id }}" href="{{ path('app_change_rate', {'id': val.id}) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green"
+                                 class="bi bi-check-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Новый пользователь</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" class="form-group" action="{{ path('app_add_user') }}">
+                        <div class="mb-3">
+                            <label for="login" class="form-label">Логин</label>
+                            <input name="login" type="text" class="form-control" id="login">
+                        </div>
+                        <div class="mb-3">
+                            <label for="pass" class="form-label">Пароль</label>
+                            <input name="pass" type="text" class="form-control" id="pass">
+                        </div>
+                        <div class="mb-3">
+                            <label for="rate" class="form-label">Ставка</label>
+                            <input name="rate" type="text" class="form-control" id="rate">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Добавить</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+
+    <script>
+        $(document).ready(function () {
+            $('#adminTable').DataTable({
+                paging: false,
+                info: false
+            });
+        });
+
+        $('.changeRate').click(function (e) {
+            e.preventDefault();
+            let user_id = this.dataset.id
+            let user_rate = $(this).parent().children('.rate')[0]
+            console.log(user_rate)
+            $.ajax({
+                url: '/change-rate',
+                method: 'POST',
+                data: {
+                    id: user_id,
+                    rate: user_rate.value
+                },
+                success: function (data) {
+                    // data = JSON.stringify(data)
+                    if (data.status === 'success') {
+                        user_rate.value = data.rate
+                    }
+                }
+            })
+        })
+    </script>
+
+{% endblock %}

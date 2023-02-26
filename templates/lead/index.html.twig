@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Лиды{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid mt-4">
+        <h4>{{ user.telegram }}</h4>
+        <div class="row align-items-center ">
+            <div class="col">
+                <div class="card text-bg-light mb-3">
+                    <div class="card-header">Кол-во лидов</div>
+                    <div class="card-body text-center">
+                        {{ total.leads }} шт.
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-bg-light mb-3">
+                    <div class="card-header">Общая выплата</div>
+                    <div class="card-body text-center">
+                        {{ total.payout }} $
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-bg-light mb-3">
+                    <div class="card-header">Общий аппрув</div>
+                    <div class="card-body text-center">
+                        {{ total.approve }} %
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-3 text-nowrap">
+                <div class="input-group mb-3">
+                    <form method="get" class="input-group">
+                    <input name="ft" type="text" id="calendar" class="form-control" placeholder="Выберите дату...">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Фильтровать</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <table id="leadsTable" class="table table-hover table-sm text-monospace font-monospace">
+            <thead>
+            <tr>
+                <th>Subid</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Откуда</th>
+                <th>Выплата</th>
+            </tr>
+            </thead>
+            <tbody class="">
+
+            {% for lead in leads %}
+                <tr>
+                    <td>{{ lead.subid }}</td>
+                    <td>{{ lead.createAt|date('d M Y, H:i:s') }}</td>
+                    <td>
+                        {% if lead.status == '1' %}
+                            <span class="badge bg-success">Принят</span>
+                        {% elseif lead.status == '0' %}
+                            <span class="badge bg-warning">Холд</span>
+                        {% else %}
+                            <span class="badge bg-danger">Треш</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ lead.source ?? '?' }}</td>
+                    <td>{{ lead.payout }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+
+    <script>
+        $(document).ready(function () {
+            $('#leadsTable').DataTable({
+                info: false,
+                language: {
+                    sEmptyTable: 'Нет лидов',
+                    sSearch: 'Поиск',
+                    sZeroRecords: 'Не нашел :(',
+                    sLengthMenu: "_MENU_  лидов на странице",
+                    oPaginate: {
+                        sFirst: "Первая",
+                        sLast: "Последняя",
+                        sNext: "→",
+                        sPrevious: "←"
+                    },
+                }
+            });
+        });
+
+        $("#calendar").flatpickr({
+            mode: 'range',
+            dateFormat: 'Y-m-d',
+            defaultDate: ["{{ date.from|date('Y-m-d') }}", "{{ date.to|date('Y-m-d') }}"]
+        });
+    </script>
+
+{% endblock %}

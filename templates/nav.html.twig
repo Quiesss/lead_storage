@@ -1,0 +1,21 @@
+
+<nav class="nav-tabs navbar navbar-expand-lg navbar-light bg-light pb-0" style="background-color: #8da9b7">
+    <div class="container-fluid">
+        <a class="navbar-brand" style="color: #93c5fd" href="#">LeadStorage</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключатель навигации">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.get('_route') == 'app_leads' ? 'active' : '' }}" aria-current="page" href="{{ path('app_leads') }}">Лиды</a>
+                </li>
+                {% if is_granted("ROLE_ADMIN") %}
+                    <li class="nav-item">
+                        <a class="nav-link {{ app.request.get('_route') == 'app_admin' ? 'active' : '' }}" href="{{ path('app_admin') }}">Пользователи</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
