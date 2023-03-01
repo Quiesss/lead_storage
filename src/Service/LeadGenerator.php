@@ -19,7 +19,7 @@ class LeadGenerator
     {
         $subid = $request->get('subid', 'undefined');
         $createAt = $request->get('createAt');
-        $status = $request->get('status', 'undefined');
+        $status = $request->get('status', 0);
         $payout = $request->get('payout', 0);
         $from = $request->get('from', '');
         $buyer = $request->get('sub_id_11');
