@@ -57,7 +57,7 @@
 {% endblock %}
 {% block header %}{% endblock %}
 {% block body %}
-    <div class="container mt-5">
+    <div class="container mt-5 w-50">
 {#<form method="post" class="w-50">#}
 {#    {% if error %}#}
 {#        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
@@ -80,22 +80,23 @@
 {#        Sign in#}
 {#    </button>#}
 {#</form>#}
+        <div class="col">
+            <form method="post" class="form-signin text-center col">
+                <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+                <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
+                <label for="inputEmail" class="sr-only mb-1"></label>
+                <input name="telegram" type="text" id="inputEmail" class="form-control mb-0" placeholder="Логин" required="" autofocus="">
+                <label for="inputPassword" class="sr-only mb-1"></label>
+                <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="">
 
-        <form method="post" class="form-signin text-center">
-            <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-            <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
-            <label for="inputEmail" class="sr-only mb-1"></label>
-            <input name="telegram" type="text" id="inputEmail" class="form-control mb-0" placeholder="Логин" required="" autofocus="">
-            <label for="inputPassword" class="sr-only mb-1"></label>
-            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Пароль" required="">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    {% if error %}
+                        <div class="text-danger font-italic mb-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
 
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                {% if error %}
-                    <div class="text-danger font-italic mb-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                {% endif %}
-
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
-        </form>
+                <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Войти</button>
+            </form>
+        </div>
 
     </div>
 {% endblock %}

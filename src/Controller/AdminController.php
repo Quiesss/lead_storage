@@ -18,8 +18,21 @@ class AdminController extends AbstractController
     public function index(EntityManagerInterface $em, Request $request): Response
     {
         $user = $request->query->get('b');
-        $from = $request->query->get('from');
-        $to = $request->query->get('to');
+
+        $date = explode(' to ', $request->query->get('ft'));
+        $from = new \DateTime();
+        $to = new \DateTime();
+
+        if (isset($date['0']) && $date['0'] != "") {
+            $from->setTimestamp(strtotime($date['0'] . ' 00:00:00') );
+        } else {
+            $from->setTimestamp(strtotime('today 00:00:00'));
+        }
+        if (isset($date['1'])) {
+            $to->setTimestamp(strtotime($date['1'] . ' 23:59:59'));
+        } else {
+            $to->setTimestamp(strtotime($date['0'] . ' 23:59:59') );
+        }
 
         $groupFromStatus = $em->getRepository(Leads::class)->getGroupLeads($from, $to, $user);
         $users = [];
@@ -46,7 +59,7 @@ class AdminController extends AbstractController
                 $totalApproveLeads += $item['leads'];
             }
             $totalPayout += $item['payout'];
-            $totalRatePayout += $item['payout'] * ($users[$item['telegram']]['rate'] / 100);
+            $totalRatePayout += $item['payout'] * (($users[$item['telegram']]['rate'] ?? 100) / 100);
             $totalLeads += $item['leads'];
 
         }
@@ -60,6 +73,10 @@ class AdminController extends AbstractController
                 'payout' => $totalPayout,
                 'ratePayout' => $totalRatePayout,
                 'approve' => $totalApproveLeads
+            ],
+            'date' => [
+                'from' => $from,
+                'to' => $to
             ]
         ]);
     }

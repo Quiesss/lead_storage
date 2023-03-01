@@ -2,10 +2,13 @@
 
 {% block title %}Лиды{% endblock %}
 
+
 {% block body %}
 
     <div class="container-fluid mt-4">
-        <h4>{{ user.telegram }}</h4>
+        <h4>
+            {{ user.telegram }}
+        </h4>
         <div class="row align-items-center ">
             <div class="col">
                 <div class="card text-bg-light mb-3">
@@ -107,6 +110,10 @@
             dateFormat: 'Y-m-d',
             defaultDate: ["{{ date.from|date('Y-m-d') }}", "{{ date.to|date('Y-m-d') }}"]
         });
+
+        new ClipboardJS('.btn');
     </script>
+
+
 
 {% endblock %}

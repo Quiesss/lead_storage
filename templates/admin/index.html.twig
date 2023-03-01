@@ -33,13 +33,28 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-3 d-flex flex-column">
+                    <div class="input-group mb-3">
+                        <form method="get" class="input-group">
+                            <input name="ft" type="text" id="calendar" class="form-control" placeholder="Выберите дату...">
+                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Фильтровать</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-auto d-flex flex-column align-items-start">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
+                        Добавить нового пользователя
+                    </button>
+                </div>
+            </div>
+
         </div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
-            Добавить пользователя
-        </button>
+
         <table id="adminTable" class="table table-hover text-monospace font-monospace">
             <thead>
             <tr>
+                <th scope="col">#</th>
                 <th scope="col">Пользователь</th>
                 <th scope="col">Кол-во лидов</th>
                 <th scope="col">Апрув %</th>
@@ -50,9 +65,10 @@
             <tbody>
             {% for user, val in users %}
                 <tr>
+                    <td>{{ val.id }}</a></td>
                     <td><a href="{{ '/leads/' ~ val.id }}">{{ user }}</a></td>
                     <td>{{ val.count }}</td>
-                    <td>{{ val.count != 0 ? (val.approve_leads / val.count)*100|round(1) ~ ' %' : 0 }}</td>
+                    <td>{{ val.count != 0 ? (val.approve_leads / val.count) * 100|round(1) ~ ' %' : 0 }}</td>
                     <td>{{ total.ratePayout }} $ / {{ val.payout }} $</td>
                     <td>
                         <input class="rate" value="{{ val.rate ?? '100' }}" style="max-width: 50px" type="text" name="rate"> %
@@ -108,10 +124,28 @@
 {% block js %}
 
     <script>
+        $("#calendar").flatpickr({
+            mode: 'range',
+            dateFormat: 'Y-m-d',
+            defaultDate: ["{{ date.from|date('Y-m-d') }}", "{{ date.to|date('Y-m-d') }}"]
+        });
+
         $(document).ready(function () {
             $('#adminTable').DataTable({
                 paging: false,
-                info: false
+                info: false,
+                language: {
+                    sEmptyTable: 'Нет лидов',
+                    sSearch: 'Поиск',
+                    sZeroRecords: 'Не нашел :(',
+                    sLengthMenu: "_MENU_  лидов на странице",
+                    oPaginate: {
+                        sFirst: "Первая",
+                        sLast: "Последняя",
+                        sNext: "→",
+                        sPrevious: "←"
+                    },
+                }
             });
         });
 

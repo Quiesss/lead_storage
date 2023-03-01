@@ -15,10 +15,10 @@ class LeadGenerator
     {
     }
 
-    public function LeadGenerate(InputBag $request): Leads
+    public function LeadGenerate(InputBag $request)
     {
-        $createAt = $request->get('createAt');
         $subid = $request->get('subid', 'undefined');
+        $createAt = $request->get('createAt');
         $status = $request->get('status', 'undefined');
         $payout = $request->get('payout', 0);
         $from = $request->get('from', '');
@@ -49,6 +49,6 @@ class LeadGenerator
         $this->em->persist($lead);
         $this->em->flush();
 
-        return $lead;
+        return 1;
     }
 }
