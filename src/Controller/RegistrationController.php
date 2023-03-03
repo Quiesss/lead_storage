@@ -58,7 +58,10 @@ class RegistrationController extends AbstractController
         $login = $data->get('login');
         $rate = $data->get('rate');
 
-        if (!$pass || !$login || !$rate) return $this->redirectToRoute('app_admin');
+        if (!$pass || !$login || !$rate) {
+            $this->addFlash('error', "Что-то не так, попробуйте еще раз");
+            return $this->redirectToRoute('app_admin');
+        }
         $user = new User();
 
         $user->setPassword($passwordHasher->hashPassword($user, $pass))
