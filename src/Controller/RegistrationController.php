@@ -67,6 +67,7 @@ class RegistrationController extends AbstractController
             ->setRoles(["APP_USER"]);
         $em->persist($user);
         $em->flush();
+        $this->addFlash('success', "Пользователь " . $login . " зарегестрирован, пароль: " . $pass);
 
         return $this->redirectToRoute("app_admin");
     }

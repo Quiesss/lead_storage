@@ -34,35 +34,54 @@ class AdminController extends AbstractController
             $to->setTimestamp(strtotime($date['0'] . ' 23:59:59') );
         }
 
+        $allUsers = $em->getRepository(User::class)->findAll();
+        $usersData = $em->getRepository(User::class)->getLeadFromUser($from, $to, $user);
         $groupFromStatus = $em->getRepository(Leads::class)->getGroupLeads($from, $to, $user);
+//        dd($usersData);
         $users = [];
+
+        foreach ($allUsers as $user) {
+            $users[$user->getTelegram()] = [
+                'telegram' => $user->getTelegram(),
+                'id' => $user->getId(),
+                'rate' => $user->getRate() ?? 100,
+                'count' => 0,
+                'approve_leads' => 0,
+                'payout' => 0
+            ];
+        }
+
         $totalLeads = 0;
         $totalApproveLeads = 0;
         $totalPayout = 0;
         $totalRatePayout = 0;
 
-        foreach ($groupFromStatus as $item) {
+        foreach ($usersData as $item) {
             if (!isset($users[$item['telegram']])) {
                 $users[$item['telegram']] = [
                     'id' => $item['id'],
-                    'rate' => $item['rate'],
+                    'rate' => $item['rate'] ?? 100,
                     'payout' => 0,
                     'count' => 0,
                     'approve_leads' => 0
                 ];
 
             }
-            $users[$item['telegram']]['payout'] += $item['payout'];
+
             $users[$item['telegram']]['count'] += $item['leads'];
-            if ($item['status'] == 'sale') {
+            if ($item['status'] == 1) {
+                $users[$item['telegram']]['payout'] += $item['payout'];
+//                $users[$item['telegram']]['ratePayout'] += $item['payout'] * ($users[$item['telegram']]['rate'] / 100);
+                $totalPayout += $item['payout'];
                 $users[$item['telegram']]['approve_leads'] += $item['leads'];
                 $totalApproveLeads += $item['leads'];
             }
-            $totalPayout += $item['payout'];
-            $totalRatePayout += $item['payout'] * (($users[$item['telegram']]['rate'] ?? 100) / 100);
+
             $totalLeads += $item['leads'];
 
         }
+
+//        dd($users);
 
         $totalApproveLeads = $totalLeads != 0 ? round(($totalApproveLeads / $totalLeads) * 100, 1) : 0;
 //        dd($totalRatePayout);

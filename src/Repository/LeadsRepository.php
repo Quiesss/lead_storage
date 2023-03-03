@@ -43,7 +43,7 @@ class LeadsRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('l');
 
         $qb->select('u.telegram', 'u.rate', 'u.id', 'COUNT(l.id) as leads', 'SUM(l.payout) as payout', 'l.status')
-        ->join('l.buyer', 'u')
+        ->leftJoin('l.buyer', 'u')
         ->groupBy('u.telegram')
         ->addGroupBy('l.status');
 

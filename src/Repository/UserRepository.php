@@ -24,6 +24,40 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
+    public function getUsers()
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $qb->select('u.telegram', 'u.rate', 'u.id');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getLeadFromUser($from = null, $to = null, User $user = null)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $qb->select('u.telegram', 'u.rate', 'u.id', 'COUNT(l.id) as leads', 'SUM(l.payout) as payout', 'l.status')
+        ->leftJoin('u.leads', 'l')
+        ->groupBy('u.telegram')
+        ->addGroupBy('l.status');
+
+        if ($user) {
+            $qb->where('u.telegram = :user')
+                ->setParameter('user', $user->getId());
+        }
+        if ($from) {
+            $qb->andWhere('l.createAt > :from')
+                ->setParameter('from', $from);
+        }
+        if ($to) {
+            $qb->andWhere('l.createAt <= :to')
+                ->setParameter('to', $to);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function save(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
