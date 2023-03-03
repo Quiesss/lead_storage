@@ -151,6 +151,8 @@
 {% block js %}
 
     <script>
+        new ClipboardJS('.copyBtn');
+
         $("#calendar").flatpickr({
             mode: 'range',
             dateFormat: 'Y-m-d',
