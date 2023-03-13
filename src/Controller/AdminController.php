@@ -73,6 +73,7 @@ class AdminController extends AbstractController
                 $users[$item['telegram']]['payout'] += $item['payout'];
 //                $users[$item['telegram']]['ratePayout'] += $item['payout'] * ($users[$item['telegram']]['rate'] / 100);
                 $totalPayout += $item['payout'];
+                $totalRatePayout += $item['payout'] * ($item['rate'] / 100);
                 $users[$item['telegram']]['approve_leads'] += $item['leads'];
                 $totalApproveLeads += $item['leads'];
             }

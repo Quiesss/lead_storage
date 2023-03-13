@@ -68,8 +68,10 @@ class LeadController extends AbstractController
 
         foreach ($leads as $lead) {
             $lead->setPayout($lead->getPayout() * ($userRate / 100));
-            $totalPayout += round($lead->getPayout() * ($userRate / 100), 1);
-            if ($lead->getStatus() == '1') $totalApprove++;
+            if ($lead->getStatus() == '1') {
+                $totalPayout += round($lead->getPayout() * ($userRate / 100), 1);
+                $totalApprove++;
+            }
         }
         $totalApprove = $totalLeads != 0 ? round(($totalApprove / $totalLeads) * 100, 1) : 0;
         return $this->render('/lead/index.html.twig', [
