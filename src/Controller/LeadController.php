@@ -67,9 +67,9 @@ class LeadController extends AbstractController
         $userRate = $user->getRate() ?? 100;
 
         foreach ($leads as $lead) {
-            $lead->setPayout($lead->getPayout() * ($userRate / 100));
+            $lead->setPayout(round($lead->getPayout() * ($userRate / 100), 1));
             if ($lead->getStatus() == '1') {
-                $totalPayout += round($lead->getPayout() * ($userRate / 100), 1);
+                $totalPayout += $lead->getPayout();
                 $totalApprove++;
             }
         }
