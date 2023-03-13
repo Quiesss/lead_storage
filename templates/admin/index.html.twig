@@ -82,7 +82,7 @@
                     <td>{{ val.count }}</td>
                     <td>
                         {% if val.count != 0 %}
-                            {{ (val.approve_leads / val.count) * 100|round(1) ~ ' %' }}
+                            {{ ((val.approve_leads / val.count) * 100)|round(1) ~ ' %' }}
                         {% else %}
                             0 %
                         {% endif %}

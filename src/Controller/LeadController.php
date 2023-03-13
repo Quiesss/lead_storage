@@ -77,9 +77,9 @@ class LeadController extends AbstractController
         return $this->render('/lead/index.html.twig', [
             'leads' => $leads,
             'total' => [
-                'payout' => $totalPayout,
+                'payout' => round($totalPayout, 1),
                 'leads' => $totalLeads,
-                'approve' => $totalApprove,
+                'approve' => round($totalApprove, 1),
             ],
             'date' => [
                 'from' => $from,

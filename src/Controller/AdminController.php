@@ -90,9 +90,9 @@ class AdminController extends AbstractController
             'users' => $users,
             'total' => [
                 'leads' => $totalLeads,
-                'payout' => $totalPayout,
-                'ratePayout' => $totalRatePayout,
-                'approve' => $totalApproveLeads
+                'payout' => round($totalPayout, 1),
+                'ratePayout' => round($totalRatePayout, 1),
+                'approve' => round($totalApproveLeads, 1)
             ],
             'date' => [
                 'from' => $from,
