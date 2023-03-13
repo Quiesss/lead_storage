@@ -87,7 +87,7 @@
                             0 %
                         {% endif %}
                     </td>
-                    <td>{{ val.payout * val.rate / 100 }} $ / {{ val.payout }} $</td>
+                    <td>{{ (val.payout * val.rate / 100)|round(1) }} $ / {{ val.payout }} $</td>
                     <td>
                         <input class="rate" value="{{ val.rate ?? '100' }}" style="max-width: 50px" type="text" name="rate"> %
                         <a class="changeRate" data-id="{{ val.id }}" href="{{ path('app_change_rate', {'id': val.id}) }}">
